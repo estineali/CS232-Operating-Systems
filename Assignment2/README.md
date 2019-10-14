@@ -1,6 +1,6 @@
 # Assignment 2 for Operating Systems
 
-	# TODO: 
+	[x] TODO: 
 		1. recreate cat command as mycat. File name should be Lec1_gp05_A2Q1_mycat.c
 		2. recreate a new shell called HUSh. Habib University Shell. File name should be Lec1_gp05_A2Q2_hush.c
 		3. There needs to be a makefile, apparently. Please see www.google.com and www.youtube.com for more support on makefiles
