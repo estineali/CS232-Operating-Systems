@@ -1,5 +1,7 @@
 # Assignment 2 for Operating Systems
 
+**Final Submission File Name:** Lec1_gp05_A2.tar.gz
+
 **TODO**: 
 
 		1. recreate cat command as mycat. File name should be Lec1_gp05_A2Q1_mycat.c
