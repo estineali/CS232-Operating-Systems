@@ -27,6 +27,6 @@
 	
 	Will generate the tar file in the cwd.
 
-**DEADLINE: Monday 21st October 11 55 PM**
+**DEADLINE:** Monday 21st October 11 55 PM
 
-**DEADLINE FOR US: Friday 18th October 11 59 PM**
+**DEADLINE FOR US:** Friday 18th October 11 59 PM
