@@ -10,7 +10,7 @@
 		5. There needs to be error checking in the code (since system calls); read up on errno, perror(), and strerror()
 		4. Lastly the code needs to be in a tex file. Template will either be provided or we will be using the same one. 
 		5. See Assignment document for more information 
-		6. Fkin explore the tar for tar.gz command already so we can form a fkin tar.gz in time ffs
+		6. [See Below]Fkin explore the tar for tar.gz command already so we can form a fkin tar.gz in time ffs
 		7. Error Handling, readability, and absence of warnings is worth 10 points. DONT FUCK UP SHAHROM! (you too famma). 
 
 **Compressing into tar.gz** :
