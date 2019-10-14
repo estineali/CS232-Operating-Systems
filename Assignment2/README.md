@@ -13,6 +13,12 @@
 		6. Fkin explore the tar for tar.gz command already so we can form a fkin tar.gz in time ffs
 		7. Error Handling, readability, and absence of warnings is worth 10 points. DONT FUCK UP SHAHROM! (you too famma). 
 
+**Compressing into tar.gz** :
+
+	To create a tar.gz archive from a given folder you can use the following command
+	
+	tar -zcvf tar-archive-name.tar.gz source-folder-name
+
 **DEADLINE: Monday 21st October 11 55 PM**
 
 **DEADLINE FOR US: Friday 18th October 11 59 PM**
