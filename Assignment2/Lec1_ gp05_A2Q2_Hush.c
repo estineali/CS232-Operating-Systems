@@ -12,13 +12,15 @@ Requirements:
 
 int main(int argc, char const *argv[])
 {
-	printf("Hey! Welcome to HUSh.\n"); // Welcome command 
+	printf("\033c"); //Clear the terminal window
 
+	// printf("Hey! Welcome to HUSh.\n"); // Welcome command 
 	char inp_by_user[100]; //Contains user input 
-	const char prompt[] = "Your wish is my command: "; //The cool prompt it shows everytime  
+	
+	const char prompt[] = "Master! Your wish is my command $ "; //The cool prompt it shows everytime  
 	
 
-	while (strncmp("exit", inp_by_user, 4) > 0)
+	while (!(strncmp("exit", inp_by_user, 4) == 0))
 	{ // bug: if input is hello, program closes all the same 
 		
 		printf("%s", prompt);
