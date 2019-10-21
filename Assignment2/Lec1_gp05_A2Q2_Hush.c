@@ -40,32 +40,34 @@ int main(int argc, char const *argv[])
 			{
 				printf("\033c");
 			} 
-			else 
-			{
-				printf("\nI dont understand your Wish, master  %s \n\n", command);	
-			}
+			
 			// else 
 			// {
-			// 	int new_proc = fork();
-
-			// 	if (new_proc < 0) 
-			// 	{
-			// 		fprintf(stderr, "Invalid Fork master!\n");
-			// 		exit(1);
-			// 	} 
-
-			// 	else if (new_proc == 0) 
-			// 	{ // child (new process)
-			// 		printf("hello, I am child (pid:%d)\n", (int) getpid());
-			// 	} 
-			// 	else 
-			// 	{
-			// 		// parent goes down this path (main)
-			// 		int termed_proc = wait(NULL);
-			// 		printf("Terminated Process: %d\n", termed_proc);
-			// 		printf("hello, I am parent of %d (pid:%d)\n", new_proc, (int) getpid());
-			// 	}
+			// 	printf("\nI dont understand your Wish, master  %s \n\n", command);	
 			// }
+
+			else 
+			{
+				int new_proc = fork();
+
+				if (new_proc < 0) 
+				{
+					fprintf(stderr, "Invalid Fork master!\n");
+					exit(1);
+				} 
+
+				else if (new_proc == 0) 
+				{ // child (new process)
+					printf("hello, I am child (pid:%d)\n", (int) getpid());
+				} 
+				else 
+				{
+					// parent goes down this path (main)
+					int termed_proc = wait(NULL);
+					printf("Terminated Process: %d\n", termed_proc);
+					printf("hello, I am parent of %d (pid:%d)\n", new_proc, (int) getpid());
+				}
+			}
 
 		}
 		free(command);
