@@ -13,7 +13,7 @@ Lec1_gp05_A2Q1_mycat.o: Lec1_gp05_A2Q1_mycat.c
 	gcc -c Lec1_gp05_A2Q1_mycat.c
 
 wrap:  
-	tar -zcvf Lec1_gp05_A2.tar.gz ./Makefile ./*.c ./*.pdf
+	tar -zcvf Lec1_gp05_A2.tar.gz ./Makefile ./*.c ./Lec1_gp05_A2.pdf ./*.tex
 
 clean:  
 	rm *.o mycat hush 

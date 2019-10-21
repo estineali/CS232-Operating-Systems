@@ -8,13 +8,19 @@
 int string_length(char* );
 void print_string_array(char* const array[]);
 
+struct process
+{
+	int pid;
+	char* name;
+	int status;
+};
 
 //Main
 int main(int argc, char const *argv[])
 {
 	printf("\033cGreetings Master\n");
 	
-
+	//Setting Path variable data structure 
 	char *VAR[16];
 	int j = 0;
 	VAR[j] = strtok(getenv("PATH"), ":");
@@ -23,13 +29,14 @@ int main(int argc, char const *argv[])
 		j++;
 		VAR[j] = strtok(NULL, ":");
 	}
+	VAR[j] = "./";
+	j++;
 	VAR[j] = NULL;
 
-	char* cwd = "./";
-	int Exit = 0;
+
+	int Exit = 0; 
 	char* prompt = "Master@HUSh: Your wish is my command$ ";  
 	int max_command_length = 255;
-
 
 	while (!Exit)
 	{
@@ -46,21 +53,18 @@ int main(int argc, char const *argv[])
 
 		else
 		{
+
 			if (strncmp("exit", command, 4) == 0 && string_length(command) == 4)
 			{
 				//Kill Running processes
+				
 				printf("So be it, Master. I will wait for your return.\n");
 				Exit = 1;
 			} 
 			else if (strncmp("clear", command, 5) == 0 && string_length(command) == 5)
 			{
 				printf("\033c");
-			} 
-			
-			// else 
-			// {
-			// 	printf("\nI dont understand your Wish, master  %s \n\n", command);	
-			// }
+			}
 
 			else 
 			{
@@ -93,25 +97,18 @@ int main(int argc, char const *argv[])
 					char buffer[255];
 					int v = 0;
 					
+					//Check all directories in path to run input program 
 					while (execvp(buffer, child_argv) == -1)
 					{
-
 						strcpy(buffer, VAR[v]);
 						strcat(buffer, "/");
 						strcat(buffer, child_argv[0]);
 						// printf("%s\n", buffer);
 						v++;
-
 					}
 
-
-					// if (execvp(, child_argv) == -1 )
-					// {
-					// 	printf("execvp on %s failed\n", child_argv[0]);	
-					// }	
-
 					fprintf(stderr, "FAILED to load %s\n", child_argv[0]);
-
+					printf("\nI dont understand your Wish, master...  %s \n\n", command);	
 					free(command);
 					exit(-1);
 				} 
@@ -119,14 +116,11 @@ int main(int argc, char const *argv[])
 				{
 					//PARENT
 					int termed_proc = wait(NULL);
-					// printf("Terminated Process: %d\n", termed_proc);
-					printf("hello, I am parent of %d (pid:%d)\n", new_proc, (int) getpid());
 				}
 			}
 
 		}
 		free(command);
-
 	}
 	return EXIT_SUCCESS;
 }
@@ -151,5 +145,4 @@ void print_string_array(char* const array[])
 		j++;
 	}
 }
-
 
