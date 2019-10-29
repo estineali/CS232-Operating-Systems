@@ -1,5 +1,5 @@
-task: todo_4.1.c
-	gcc todo_4.1.c -l pthread -o task
+task: todo_51.c
+	gcc todo_51.c -l pthread -o task
 
 my_making: threaded
 
