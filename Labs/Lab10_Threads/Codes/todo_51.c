@@ -15,6 +15,9 @@ threaded_proc_2(void * args)
 {
 
 	printf("Hello world.\nI am P2 Thread %ld. \n", pthread_self());
+	int* ret = 0;
+	pthread_exit(ret);
+	printf("%d\n", *ret);
 	return NULL;
 }
 
