@@ -1,9 +1,17 @@
-network: *.c *.h	
-	gcc *.c *.h -l pthread -o network.comp
+all: *.c *.h	
+	client server 
+	
+
+client: client.c
+	gcc client* -l pthread -o client.comp
+
+server: server.c
+	gcc server* -l pthread -o server.comp
 
 wrap:
-	tar -zcvf Lec1_ma03559_fn03768_A4.tar.gz ./*.c ./*.h ./Makefile
-	#add pdf file aswell  
+	mv -i ./*.tar.gz ../endgame_old.tar.gz
+	tar -zcvf go05_A4.tar.gz ./*.c ./*.h ./Makefile 
+	#add pdf file aswell   ./go05_A4.pdf
 
 
 clear:
