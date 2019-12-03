@@ -12,16 +12,15 @@ server: server.c
 	gcc server* -l pthread -o server.comp
 
 wrap:
+	make $(file).pdf 
 	make cleantex
-	mv -i -f ./*.tar.gz ../endgame_old.tar.gz
-	tar -zcvf go05_A4.tar.gz ./*.c ./*.h ./Makefile 
-	#add pdf file aswell   ./go05_A4.pdf
+	tar -zcvf gp05_A4.tar.gz ./*.c ./*.h ./Makefile ./gp05_A4.pdf ./*.tex
 
 assign4: $(file).pdf
 
 maketex : assign4
 
-$(file).pdf: *.tex
+$(file).pdf: *.tex *.c Makefile *.h
 	pdflatex $(file)
 	pdflatex $(file)
 	bibtex $(file).aux
