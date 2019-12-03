@@ -1,0 +1,64 @@
+\documentclass[a4paper]{article}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{spverbatim}
+\usepackage[dvipsnames]{xcolor}
+
+\newcommand{\shellcmd}[1]{\\\indent\indent\texttt{\footnotesize\# #1}\\}
+\newcommand\complete[1]{\textcolor{OliveGreen}{\textbf{#1}}}
+\newcommand\pending[1]{\textcolor{red}{\textbf{#1}}}
+
+\usepackage{listings}
+\lstset{
+  language=C,
+  basicstyle=\ttfamily
+}
+
+
+\begin{document}
+
+
+\title{CS232 Operating Systems \\ Assignment 04: Introduction to Socket Programming}
+\author{Muhammad Shahrom Ali (ma03559) \and Fatima Nadeem (fn03768)}
+\date{Fall 2019}
+
+\maketitle
+
+
+\section {Client}
+\clearpage
+\section {Server}
+\clearpage
+\section {Makefile}
+
+\lstinputlisting{Makefile}
+
+\clearpage
+\section {Comments}
+    \subsection{Deficiencies}
+        \begin{enumerate}
+            \item \complete{ Indicated their group in the excel sheet before submission deadline} - 10 marks
+            \item \complete{ Files named correctly} - 10 marks
+            \item \complete{ PDF submitted correctly} - 10 marks
+            \item \complete{ Codes compile without errors and warnings} - 10 marks
+            \item \pending{ Client communicates with server} - 10 marks
+            \item \pending{ /list command working correctly} - 10 marks
+            \item \pending{ /msg command working correctly} - 10 marks
+            \item \pending{ /quit command working correctly} - 10 marks
+            \item \pending{ linked list implementation is thread safe} - 10 marks
+            \item \complete{ no memory leaks}- 10 marks
+        \end{enumerate}
+    \subsection{Credits}
+        \begin{enumerate}
+            \item Credits to Muhammad Shahzain for the motivation to do the assignment
+            
+            \item Credits for \LaTeX{} colored font to 
+            \begin{spverbatim}
+https://tex.stackexchange.com/questions/308087/command-for-both-bold-and-colored-text
+            \end{spverbatim}
+            
+            \item Dr. Musabbir Abdul Majeed's group project 4 zip for CS 340/MATH 321, support with makefiles. 
+        \end{enumerate}
+    \subsection{General Comments}
+        Enjoyed learning about sockets, considering enrolling in the networking course next year. Really wish had more time for the assignment. [and a live-in campus but we can't always get what we want :( ] 
+
+\end{document}
