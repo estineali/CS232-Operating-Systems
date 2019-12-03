@@ -1,6 +1,6 @@
 # Assignment 4 for Operating Systems
 
-**Final Submission File Name:** Lec1_ma03559_fn03768_A4.tar.gz
+**Final Submission File Name:** go05_A4.tar.gz
 		
 [Overleaf Project Here] (https://www.overleaf.com/9784136382fztjxxnktsyn)
 
@@ -16,7 +16,7 @@
 	2. ONLY COMPRESS THE FILES REQUIRED (.tex, .pdf, .c, makefiles)
 	3. type the following: 
 	
-	tar -zcvf Lec1_ma03559_fn03768_A4.tar.gz ./*.c ./*.h ./Makefile
+	tar -zcvf go05_A4.tar.gz ./*.c ./*.h ./Makefile
 	
 	Will generate the tar file in the cwd.
 
