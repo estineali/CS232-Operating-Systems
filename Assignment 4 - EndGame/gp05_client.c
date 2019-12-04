@@ -1,15 +1,3 @@
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <pthread.h>
-// #include <sys/types.h> 
-// #include <sys/socket.h>
-
-// int main(int argc, char const *argv[])
-// {
-// 	printf("Hello Client.\n");
-// 	return 0;
-// }
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,9 +11,9 @@ int main(int argc, char const* argv[]){
 
   char HorIP[]= arg[1];  //the hostname or IP we are looking up
   short port = arg[2];  //the port we are connecting on
-  char* clientname = arg[3];  //the client name
+  char identifier[] = arg[3];  //the client name
 
-  struct addrinfo *result;  //to store results
+  struct addrinfo *result;  //to store result
   struct addrinfo hints;  //to indicate information we want
 
   struct sockaddr_in *saddr_in;  //socket internet address
@@ -34,12 +22,7 @@ int main(int argc, char const* argv[]){
 
   int sock;  //socket file descriptor
 
-  // //char request[]="GET /index.html\n\r"; //the GET request
-  // char request[]="GET /index.html\r\n\r\n"; //the GET request
-  // //char request[]= "GET / HTTP/1.0\r\n\r\n";
-
-  // char response[4096];           //read in 4096 byte chunks
-
+  char response[4096];  //read in 4096 byte chunks
 
   //setup our hints
   memset(&hints, 0, sizeof(struct addrinfo));  //zero out hints
@@ -72,9 +55,9 @@ int main(int argc, char const* argv[]){
   }
 
   //send the request
-  if(write(sock, request, strlen(request)) < 0)
+  if(write(sock, identifier, strlen(identifier)) < 0)
   {
-    perror("send");
+    perror("send identifier");
   }
 
   //read the response until EOF
@@ -83,7 +66,7 @@ int main(int argc, char const* argv[]){
     //write response to stdout
     if(write(1, response, n) < 0)
     {
-      perror("write");
+      perror("write to stdout");
       exit(1);
     }
   }
