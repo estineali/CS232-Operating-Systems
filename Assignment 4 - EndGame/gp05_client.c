@@ -67,13 +67,12 @@ int main(int argc, char* argv[])
   }
 
   do{
-  	fgets(message, BUF_SIZE, stdin)
+  	fgets(message, BUF_SIZE, stdin);
   	if(write(sock, message, strlen(message)) < 0)
   	{
   		perror("send message");
   	}
-  }
-  while(message != "/quit")
+  } while(strncmp("\\quit", message, strlen("\\quit")));
 
   //read the response until EOF
   while( (n = read(sock, response, BUF_SIZE)) > 0)
