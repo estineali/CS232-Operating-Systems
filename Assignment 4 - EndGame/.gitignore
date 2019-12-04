@@ -1,1 +1,15 @@
 *.pdf
+*.comp
+*.aux
+*.log
+*.lof
+*.toc
+*.bbl
+*.blg
+*.brf
+*.out
+*.snm 
+*.nav 
+*.gz 
+*.fdb_latexmk 
+*.fls
