@@ -1,24 +1,21 @@
 file = gp05_A4
 
-all: *.c *.h	
-	make client 
-	make server 
-	
+all: client server 
 
-client: client.c
-	gcc client* -l pthread -o client.comp
+client: gp05_client.c
+	gcc gp05_client.c -l pthread -o client.comp
 
-server: server.c
-	gcc server* -l pthread -o server.comp
+server: gp05_server.c
+	gcc gp05_client.c -l pthread -o server.comp
 
 wrap:
 	make $(file).pdf 
 	make cleantex
-	tar -zcvf gp05_A4.tar.gz ./*.c ./*.h ./Makefile ./gp05_A4.pdf ./*.tex
+	tar -zcvf gp05_A4.tar.gz ./*.c ./Makefile ./gp05_A4.pdf ./*.tex
 
-assign4: $(file).pdf
 
-maketex : assign4
+maketex : $(file).pdf
+# assign4: 
 
 $(file).pdf: *.tex *.c Makefile *.h
 	pdflatex $(file)
