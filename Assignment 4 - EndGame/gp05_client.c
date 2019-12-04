@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
   }
 
   //connect to the server
-  if(connect(sock, (struct sockaddr *)saddr_in, sizeof(*saddr_in)) < 0)
+  if(connect(sock, (struct sockaddr *) saddr_in, sizeof(*saddr_in)) < 0)
   {
     perror("connect");
     exit(1);
