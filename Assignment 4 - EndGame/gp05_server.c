@@ -37,6 +37,8 @@ typedef struct client_class
 {
 	struct sockaddr_in client_saddr_in;
 	int client_sock;
+	char response[BUF_SIZE];
+	int n;
 	
 } client_t;
 
@@ -55,34 +57,36 @@ int main(int argc, char* argv[])
 	}
 
 	server_t main_server;
-	client_t client;
-
 	set_up_server(&main_server, atoi(argv[1]));
+
+	// for (int i = 0; i < 5; ++i)
+	// {
+
+	// }
+	client_t client;
 	connect_to_client(&client, &main_server);
 		
 	//read from client
-	char response[BUF_SIZE];
-	int n = read(client.client_sock, response, BUF_SIZE-1);  //bytes read from client 
-	if(n < 0)
+	client.n = read(client.client_sock, client.response, BUF_SIZE-1);  //bytes read from client 
+	if(client.n < 0)
 	{
 		perror("read");
 		exit(1);
 	}
-	response[n] = '\0'; //NULL terminate string
+	client.response[client.n] = '\0'; //NULL terminate string
 	
-	printf("Read from client: %s\n", response);
+	printf("Read from client: %s\n", client.response);
 	
 	//construct response
-	snprintf(response, BUF_SIZE, "Hello %s:%d \nGo Navy! Beat Army\n",
+	snprintf(client.response, BUF_SIZE, "Hello %s:%d \nGo Navy! Beat Army\n",
 		inet_ntoa(client.client_saddr_in.sin_addr), //address as dotted quad
 		ntohs(client.client_saddr_in.sin_port)); //the point main(int argc, char* argv[])
-	// int serv_socket = socket(AF_INET, SOCK_STREAM, 0);
-	// rt in host order
+
 	
-	printf("Sending: %s",response);
+	printf("Sending: %s",client.response);
 	
 	//send response
-	if(write(client.client_sock, response, strlen(response)) < 0)
+	if(write(client.client_sock, client.response, strlen(client.response)) < 0)
 	{
 		perror("write");
 		exit(1);
