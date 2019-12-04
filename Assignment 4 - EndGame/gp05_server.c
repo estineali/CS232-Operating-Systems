@@ -9,35 +9,35 @@
 
 #define BUF_SIZE 4096
 
-
 //Structs
 typedef struct Node
 {	
-	int value;
+	char* client_identifier;
+	short client_port;
 	struct Node_t *next;
 } Node_t;
 
 typedef struct LinkedList	
 {
 	Node_t *head;
-	value_t node_count; //Count of nodes.
+	int node_count; //Count of nodes.
 } LinkedList_t;
-
-//Prototypes
-void testing_LinkedList();
 
 //Main
 int main(int argc, char* argv[])
 {
-	// int serv_socket = socket(AF_INET, SOCK_STREAM, 0);
-	char hostname[]="127.0.0.1"; //localhost ip address to bind to
-	short port=1845; //the port we are to bind to
+	char* talk_serv = "server: ";
+
+	char* hostname = "127.0.0.1"; //localhost ip address to bind to
+	short port=5566; //the port we are to bind to
 	
 	struct sockaddr_in saddr_in;  //socket internet address of server
 	struct sockaddr_in client_saddr_in;  //socket internet address of client
 	
 	socklen_t saddr_len = sizeof(struct sockaddr_in);  //length of address
-	int server_sock, client_sock;  //socket file descriptors
+	
+	int server_sock; 
+	int client_sock;
 	
 	char response[BUF_SIZE];  //what to send to the client
 	int n;  //length measure
@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
 	}
 	
 	response[n] = '\0'; //NULL terminate string
-	printf("Read from client: %s", response);
+	printf("Read from client: %s\n", response);
 	
 	//construct response
 	snprintf(response, BUF_SIZE, "Hello %s:%d \nGo Navy! Beat Army\n",
@@ -122,24 +122,25 @@ int main(int argc, char* argv[])
 
 
 
+//Delete this function 
 	
-//Helpers and Testers
-void testing_LinkedList()
-{
-	// Test code
-	LinkedList_t L;
-	L.node_count = 0;
-	L.head = NULL;
+// //Helpers and Testers
+// void testing_LinkedList()
+// {
+// 	// Test code
+// 	LinkedList_t L;
+// 	L.node_count = 0;
+// 	L.head = NULL;
 
-	Node_t n;
-	n.value = 5;
-	n.next = NULL;
+// 	Node_t n;
+// 	n.value = 5;
+// 	n.next = NULL;
 
-	L.head = &n;
-	L.node_count++;
+// 	L.head = &n;
+// 	L.node_count++;
 
-	printf("Value of n.value = %d\n", n.value);
-	printf("Value of L.head.value = %d\n", L.head->value);
-	printf("n address: %p\n", &n);
-	printf("head pointing to address: %p\n", L.head);
-}
+// 	printf("Value of n.value = %d\n", n.value);
+// 	printf("Value of L.head.value = %d\n", L.head->value);
+// 	printf("n address: %p\n", &n);
+// 	printf("head pointing to address: %p\n", L.head);
+// }

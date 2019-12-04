@@ -2,18 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 
 #define BUF_SIZE 4096
 
-int main(int argc, char const* argv[])
+int main(int argc, char* argv[])
 {
-  char HorIP[]= argv[1];  //the hostname or IP we are looking up
-  short port = argv[2];  //the port we are connecting on
-  char identifier[] = argv[3];  //the client name
+  char* talk_clint = "client: ";
+
+  char* host_ip = argv[1];  //the hostname or IP we are looking up
+  short port = atoi(argv[2]);  //the port we are connecting on
+  char* identifier = argv[3];  //the client name
 
   struct addrinfo *result;  //to store result
   struct addrinfo hints;  //to indicate information we want
@@ -31,7 +34,7 @@ int main(int argc, char const* argv[])
   hints.ai_family = AF_INET; //we only want IPv4 addresses
 
   //Convert the hostname to an address
-  if((s = getaddrinfo(HorIP, NULL, &hints, &result)) != 0)
+  if((s = getaddrinfo(host_ip, NULL, &hints, &result)) != 0)
   {
     fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(s));
     exit(1);
@@ -66,11 +69,21 @@ int main(int argc, char const* argv[])
   while( (n = read(sock, response, BUF_SIZE)) > 0)
   {
     //write response to stdout
+
     if(write(1, response, n) < 0)
     {
       perror("write to stdout");
       exit(1);
     }
+
+    char* write_back = "Client: Hello, Server. ";
+
+    if(write(sock, write_back, n) < 0)
+    {
+      perror("write to server");
+      exit(1);
+    }
+
   }
 
   if (n < 0)
