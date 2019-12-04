@@ -23,54 +23,44 @@ typedef struct LinkedList
 	int node_count; //Count of nodes.
 } LinkedList_t;
 
+typedef struct server_class
+{
+	char* server_IP;
+	short port;
+	struct sockaddr_in saddr_in;
+	socklen_t saddr_len;
+	int server_sock;
+	
+} server_t;
+
+typedef struct client_class
+{
+
+	
+} client_t;
+
+//Prototypes
+void set_up_server(server_t* s, short argv_port);
+
 //Main
 int main(int argc, char* argv[])
 {
-	char* hostname = "127.0.0.1"; //localhost ip address to bind to
-	short port = atoi(argv[1]); //the port we are to bind to
-	
-	struct sockaddr_in saddr_in;  //socket internet address of server
+
 	struct sockaddr_in client_saddr_in;  //socket internet address of client
-	
-	socklen_t saddr_len = sizeof(struct sockaddr_in);  //length of address
-	
-	int server_sock; 
 	int client_sock;
+
+	server_t main_server;
+	set_up_server(&main_server, atoi(argv[1]));
+	
+	printf("Listening On: %s:%d\n", 
+		inet_ntoa(main_server.saddr_in.sin_addr), 
+		ntohs(main_server.saddr_in.sin_port));
 	
 	char response[BUF_SIZE];  //what to send to the client
 	int n;  //length measure
 	
-	//set up the server socket internet address information
-	saddr_in.sin_family = AF_INET;
-	inet_aton(hostname, &saddr_in.sin_addr);
-	saddr_in.sin_port = htons(port);
-	
-	//open a server socket for listening
-	if((server_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-	{
-		perror("server socket");
-		exit(1);
-	}
-	
-	//bind the server socket
-	if(bind(server_sock, (struct sockaddr *) &saddr_in, saddr_len) < 0)
-	{
-		perror("bind");
-		exit(1);
-	}
-	
-	//ready to listen, queue up to 5 pending connectinos
-	if(listen(server_sock, 5) < 0)
-	{
-		perror("listen");
-		exit(1);
-	}
-	
-	// saddr_len = sizeof(struct sockaddr_in); //(Idk why they had this in the code. Isn't it already initialised?) //length of address 
-	printf("Listening On: %s:%d\n", inet_ntoa(saddr_in.sin_addr), ntohs(saddr_in.sin_port));
-	
 	//accept incoming connections
-	if((client_sock = accept(server_sock, (struct sockaddr *) &client_saddr_in, &saddr_len)) < 0)
+	if((client_sock = accept(main_server.server_sock, (struct sockaddr *) &client_saddr_in, &main_server.saddr_len)) < 0)
 	{
 		perror("accept");
 		exit(1);
@@ -113,8 +103,44 @@ int main(int argc, char* argv[])
 	close(client_sock);
 	
 	//close the socket
-	close(server_sock);
+	close(main_server.server_sock);
 	
 	return 0; //success
 }
 
+void set_up_server(server_t* s, short argv_port)
+{
+	//Setting Values
+	s->server_IP = "127.0.0.1";
+	s->port = argv_port;
+	s->saddr_len = sizeof(struct sockaddr_in);
+
+	s->saddr_in.sin_family = AF_INET;
+	s->saddr_in.sin_addr.s_addr = INADDR_ANY;
+	s->saddr_in.sin_port = htons(s->port);
+	inet_aton(s->server_IP, &s->saddr_in.sin_addr);
+	
+	//initializing socket
+	s->server_sock = socket(AF_INET, SOCK_STREAM, 0);
+	if(s->server_sock < 0)
+	{
+		perror("server socket");
+		exit(1);
+	}
+
+	//binding socket to IP
+	int bind_success = bind(s->server_sock, (const struct sockaddr *) &s->saddr_in, s->saddr_len);
+	if(bind_success < 0)
+	{
+		perror("bind");
+		exit(1);
+	}
+
+	int queue_size = 5;
+	//ready to listen, queue up to queue_size pending connectinos
+	if(listen(s->server_sock, queue_size) < 0)
+	{
+		perror("listen");
+		exit(1);
+	}
+}

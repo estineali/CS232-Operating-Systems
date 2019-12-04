@@ -12,7 +12,6 @@
 
 int main(int argc, char* argv[])
 {
-  char* talk_clint = "client: ";
 
   char* host_ip = argv[1];  //the hostname or IP we are looking up
   short port = atoi(argv[2]);  //the port we are connecting on
@@ -69,21 +68,11 @@ int main(int argc, char* argv[])
   while( (n = read(sock, response, BUF_SIZE)) > 0)
   {
     //write response to stdout
-
     if(write(1, response, n) < 0)
     {
       perror("write to stdout");
       exit(1);
     }
-
-    char* write_back = "Client: Hello, Server. ";
-
-    if(write(sock, write_back, n) < 0)
-    {
-      perror("write to server");
-      exit(1);
-    }
-
   }
 
   if (n < 0)
