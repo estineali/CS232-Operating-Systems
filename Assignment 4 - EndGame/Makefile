@@ -17,7 +17,7 @@ wrap:
 maketex : $(file).pdf
 # assign4: 
 
-$(file).pdf: *.tex *.c Makefile *.h
+$(file).pdf: *.tex *.c Makefile
 	pdflatex $(file)
 	pdflatex $(file)
 	bibtex $(file).aux
