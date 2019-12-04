@@ -7,6 +7,8 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
+#define BUF_SIZE 4096
+
 int main(int argc, char const* argv[]){
 
   char HorIP[]= arg[1];  //the hostname or IP we are looking up
@@ -22,7 +24,7 @@ int main(int argc, char const* argv[]){
 
   int sock;  //socket file descriptor
 
-  char response[4096];  //read in 4096 byte chunks
+  char response[BUF_SIZE];  //read in 4096 byte chunks
 
   //setup our hints
   memset(&hints, 0, sizeof(struct addrinfo));  //zero out hints
@@ -61,7 +63,7 @@ int main(int argc, char const* argv[]){
   }
 
   //read the response until EOF
-  while( (n = read(sock, response, 4096)) > 0)
+  while( (n = read(sock, response, BUF_SIZE)) > 0)
   {
     //write response to stdout
     if(write(1, response, n) < 0)
