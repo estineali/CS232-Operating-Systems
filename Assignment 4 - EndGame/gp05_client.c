@@ -9,8 +9,8 @@
 
 #define BUF_SIZE 4096
 
-int main(int argc, char const* argv[]){
-
+int main(int argc, char const* argv[])
+{
   char HorIP[]= arg[1];  //the hostname or IP we are looking up
   short port = arg[2];  //the port we are connecting on
   char identifier[] = arg[3];  //the client name
