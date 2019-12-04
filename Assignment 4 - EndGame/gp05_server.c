@@ -70,6 +70,7 @@ int main(int argc, char* argv[])
 	client_t client;
 	connect_to_client(&client, &main_server);
 		
+	char message_to_send[BUF_SIZE];
 	//read from client
 	int read_count = 0;
 	do
@@ -86,25 +87,22 @@ int main(int argc, char* argv[])
 			client.identifier = client.response;
 		}
 		read_count++;
-	} while (strncmp("\\quit", client.response, strlen("\\quit")));
+		
+		printf("\nRead from client: %s\n", client.response);
 
-	
-	printf("Read from client: %s\n", client.response);
-	
-	//construct response
-	snprintf(client.response, BUF_SIZE, "Hello %s:%d \nGo Navy! Beat Army\n",
+		snprintf(message_to_send, BUF_SIZE, "Hello %s:%d \nI am server. \nThis is the %dth response.\n",
 		inet_ntoa(client.client_saddr_in.sin_addr), //address as dotted quad
-		ntohs(client.client_saddr_in.sin_port)); //the point main(int argc, char* argv[])
+		ntohs(client.client_saddr_in.sin_port), read_count); //the point main(int argc, char* argv[])
 
-	
-	printf("Sending: %s",client.response);
-	
-	//send response
-	if(write(client.client_sock, client.response, strlen(client.response)) < 0)
-	{
-		perror("write");
-		exit(1);
-	}
+		printf("Sending: %s",message_to_send);
+
+		if(write(client.client_sock, message_to_send, strlen(message_to_send)) < 0)
+		{
+			perror("write");
+			exit(1);
+		}
+
+	} while (strncmp("\\quit", client.response, strlen("\\quit")));
 	
 	printf("Closing socket\n\n");
 	
