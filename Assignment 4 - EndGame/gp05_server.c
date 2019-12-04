@@ -26,10 +26,8 @@ typedef struct LinkedList
 //Main
 int main(int argc, char* argv[])
 {
-	char* talk_serv = "server: ";
-
 	char* hostname = "127.0.0.1"; //localhost ip address to bind to
-	short port=5566; //the port we are to bind to
+	short port = atoi(argv[1]); //the port we are to bind to
 	
 	struct sockaddr_in saddr_in;  //socket internet address of server
 	struct sockaddr_in client_saddr_in;  //socket internet address of client
@@ -120,27 +118,3 @@ int main(int argc, char* argv[])
 	return 0; //success
 }
 
-
-
-//Delete this function 
-	
-// //Helpers and Testers
-// void testing_LinkedList()
-// {
-// 	// Test code
-// 	LinkedList_t L;
-// 	L.node_count = 0;
-// 	L.head = NULL;
-
-// 	Node_t n;
-// 	n.value = 5;
-// 	n.next = NULL;
-
-// 	L.head = &n;
-// 	L.node_count++;
-
-// 	printf("Value of n.value = %d\n", n.value);
-// 	printf("Value of L.head.value = %d\n", L.head->value);
-// 	printf("n address: %p\n", &n);
-// 	printf("head pointing to address: %p\n", L.head);
-// }
