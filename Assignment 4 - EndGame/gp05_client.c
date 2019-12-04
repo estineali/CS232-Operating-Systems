@@ -67,28 +67,27 @@ int main(int argc, char* argv[])
   }
 
   do{
+    printf("Enter a message: ");
   	fgets(message, BUF_SIZE, stdin);
   	if(write(sock, message, strlen(message)) < 0)
   	{
   		perror("send message");
   	}
-  } while(strncmp("\\quit", message, strlen("\\quit")));
 
-  //read the response until EOF
-  while( (n = read(sock, response, BUF_SIZE)) > 0)
-  {
-    //write response to stdout
-    if(write(1, response, n) < 0)
+    while ((n = read(sock, response, BUF_SIZE)) > 0)
     {
-      perror("write to stdout");
-      exit(1);
+      //write response to stdout
+      if(write(1, response, n) < 0)
+      {
+        perror("write to stdout");
+        exit(1);
+      }
     }
-  }
-
-  if (n < 0)
-  {
-    perror("read");
-  }
+    if (n < 0)
+    {
+      perror("read");
+    }
+  } while(strncmp("\\quit", message, strlen("\\quit")));
 
   //close the socket
   close(sock);
