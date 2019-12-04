@@ -10,32 +10,33 @@
 
 #define BUF_SIZE 4096
 
-int main(){
-	char hostname[]="127.0.0.1"; //localhost ip address to bind to
-	short port=1845; //the port we are to bind to
+int main()
+{
+	char hostname[] = "localhost";  //(not sure if we enter this as a variable or character array) //localhost ip address to bind to
+	short port=1845;  //the port we are to bind to
 	
-	struct sockaddr_in saddr_in; //socket interent address of server
-	struct sockaddr_in client_saddr_in; //socket interent address of client
+	struct sockaddr_in saddr_in;  //socket internet address of server
+	struct sockaddr_in client_saddr_in;  //socket internet address of client
 	
-	socklen_t saddr_len = sizeof(struct sockaddr_in); //length of address
-	int server_sock, client_sock; //socket file descriptor
+	socklen_t saddr_len = sizeof(struct sockaddr_in);  //length of address
+	int server_sock, client_sock;  //socket file descriptors
 	
-	char response[BUF_SIZE]; //what to send to the client
-	int n; //length measure
+	char response[BUF_SIZE];  //what to send to the client
+	int n;  //length measure
 	
-	//set up the address information
+	//set up the server socket internet address information
 	saddr_in.sin_family = AF_INET;
 	inet_aton(hostname, &saddr_in.sin_addr);
 	saddr_in.sin_port = htons(port);
 	
-	//open a socket
-	if( (server_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+	//open a server socket for listening
+	if((server_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 	{
-		perror("socket");
+		perror("server socket");
 		exit(1);
 	}
 	
-	//bind the socket
+	//bind the server socket
 	if(bind(server_sock, (struct sockaddr *) &saddr_in, saddr_len) < 0)
 	{
 		perror("bind");
@@ -49,7 +50,7 @@ int main(){
 		exit(1);
 	}
 	
-	saddr_len = sizeof(struct sockaddr_in); //length of address
+	// saddr_len = sizeof(struct sockaddr_in); //(Idk why they had this in the code. Isn't it already initialised?) //length of address 
 	printf("Listening On: %s:%d\n", inet_ntoa(saddr_in.sin_addr), ntohs(saddr_in.sin_port));
 	
 	//accept incoming connections
