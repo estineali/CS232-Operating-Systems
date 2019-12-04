@@ -11,9 +11,9 @@
 
 int main(int argc, char const* argv[])
 {
-  char HorIP[]= arg[1];  //the hostname or IP we are looking up
-  short port = arg[2];  //the port we are connecting on
-  char identifier[] = arg[3];  //the client name
+  char HorIP[]= argv[1];  //the hostname or IP we are looking up
+  short port = argv[2];  //the port we are connecting on
+  char identifier[] = argv[3];  //the client name
 
   struct addrinfo *result;  //to store result
   struct addrinfo hints;  //to indicate information we want

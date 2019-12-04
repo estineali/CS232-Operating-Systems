@@ -3,17 +3,35 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 
 #define BUF_SIZE 4096
 
-int main()
+
+//Structs
+typedef struct Node
+{	
+	int value;
+	struct Node_t *next;
+} Node_t;
+
+typedef struct LinkedList	
 {
-	char hostname[] = "localhost";  //(not sure if we enter this as a variable or character array) //localhost ip address to bind to
-	short port=1845;  //the port we are to bind to
+	Node_t *head;
+	value_t node_count; //Count of nodes.
+} LinkedList_t;
+
+//Prototypes
+void testing_LinkedList();
+
+//Main
+int main(int argc, char* argv[])
+{
+	// int serv_socket = socket(AF_INET, SOCK_STREAM, 0);
+	char hostname[]="127.0.0.1"; //localhost ip address to bind to
+	short port=1845; //the port we are to bind to
 	
 	struct sockaddr_in saddr_in;  //socket internet address of server
 	struct sockaddr_in client_saddr_in;  //socket internet address of client
@@ -78,7 +96,9 @@ int main()
 	//construct response
 	snprintf(response, BUF_SIZE, "Hello %s:%d \nGo Navy! Beat Army\n",
 		inet_ntoa(client_saddr_in.sin_addr), //address as dotted quad
-		ntohs(client_saddr_in.sin_port)); //the port in host order
+		ntohs(client_saddr_in.sin_port)); //the point main(int argc, char* argv[])
+	// int serv_socket = socket(AF_INET, SOCK_STREAM, 0);
+	// rt in host order
 	
 	printf("Sending: %s",response);
 	
@@ -98,4 +118,28 @@ int main()
 	close(server_sock);
 	
 	return 0; //success
+}
+
+
+
+	
+//Helpers and Testers
+void testing_LinkedList()
+{
+	// Test code
+	LinkedList_t L;
+	L.node_count = 0;
+	L.head = NULL;
+
+	Node_t n;
+	n.value = 5;
+	n.next = NULL;
+
+	L.head = &n;
+	L.node_count++;
+
+	printf("Value of n.value = %d\n", n.value);
+	printf("Value of L.head.value = %d\n", L.head->value);
+	printf("n address: %p\n", &n);
+	printf("head pointing to address: %p\n", L.head);
 }
