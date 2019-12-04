@@ -11,19 +11,6 @@
 #define BUF_SIZE 4096
 
 //Structs
-typedef struct Node
-{	
-	char* client_identifier;
-	short client_port;
-	struct Node_t *next;
-} Node_t;
-
-typedef struct LinkedList	
-{
-	Node_t *head;
-	int node_count; //Count of nodes.
-} LinkedList_t;
-
 typedef struct server_class
 {
 	char* server_IP;
@@ -40,13 +27,29 @@ typedef struct client_class
 	int client_sock;
 	char response[BUF_SIZE];
 	int n;
+	char* identifier;
 	
 } client_t;
+
+typedef struct Node
+{	
+	client_t* _client;
+	struct Node_t *next;
+} Node_t;
+
+typedef struct LinkedList	
+{
+	Node_t *head_client;
+	int client_count;
+} LinkedList_t;
+
+
 
 //Prototypes
 void set_up_server(server_t* s, short argv_port);
 void* connect_to_client(client_t* c, server_t* s);
 
+LinkedList_t all_clients;
 
 //Main
 int main(int argc, char* argv[])
@@ -57,24 +60,34 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
+	all_clients.client_count = 0;
+	all_clients.head_client = NULL;
+
 	server_t main_server;
 	set_up_server(&main_server, atoi(argv[1]));
 
-	// for (int i = 0; i < 5; ++i)
-	// {
 
-	// }
 	client_t client;
 	connect_to_client(&client, &main_server);
 		
 	//read from client
-	client.n = read(client.client_sock, client.response, BUF_SIZE-1);  //bytes read from client 
-	if(client.n < 0)
+	int read_count = 0;
+	do
 	{
-		perror("read");
-		exit(1);
-	}
-	client.response[client.n] = '\0'; //NULL terminate string
+		client.n = read(client.client_sock, client.response, BUF_SIZE-1);  //bytes read from client 
+		if(client.n < 0)
+		{
+			perror("read");
+			exit(1);
+		}
+		client.response[client.n] = '\0'; //NULL terminate string
+		if (read_count == 0)
+		{
+			client.identifier = client.response;
+		}
+		read_count++;
+	} while (strncmp("\\quit", client.response, strlen("\\quit")));
+
 	
 	printf("Read from client: %s\n", client.response);
 	
@@ -170,3 +183,26 @@ void* connect_to_client(client_t* c, server_t* s)
 			//the port in host order
 			//the file descriptor number
 }
+
+// int add_client(client_t* c, char* identifier)
+// {	
+// 	//Check if already exists 
+// 	Node_t* temp_c = all_clients.head_client; 
+// 	for (int i = 0; i < all_clients.client_count; ++i)
+// 	{
+// 		if (strcmp(temp_c->client_identifier, identifier) == 0)
+// 		{
+// 			printf("ERROR: non-unique identifier. Can\'t add client.\n");
+// 			return -1;
+// 		}
+// 		temp_c = temp_c->next;
+// 	}
+
+// 	return 0;
+
+// }
+
+// void* get_client(char* identifier)
+// {
+
+// }
