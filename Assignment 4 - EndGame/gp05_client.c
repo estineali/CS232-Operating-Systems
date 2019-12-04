@@ -72,7 +72,6 @@ int main(int argc, char* argv[])
   	{
   		perror("send message");
   	}
-  	
   }
   while(message != "/quit")
 
