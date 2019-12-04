@@ -54,7 +54,7 @@ int main(int argc, char const* argv[]){
     exit(1);
   }
 
-  //send the request
+  //send the identifier
   if(write(sock, identifier, strlen(identifier)) < 0)
   {
     perror("send identifier");
