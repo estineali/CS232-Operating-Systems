@@ -7,6 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <pthread.h>
 
 #define BUF_SIZE 4096
 
@@ -27,6 +28,7 @@ int main(int argc, char* argv[])
   int sock;  //socket file descriptor
 
   char response[BUF_SIZE];  //read in 4096 byte chunks
+  char message[BUF_SIZE];  //write in 4096 byte chunks
 
   //setup our hints
   memset(&hints, 0, sizeof(struct addrinfo));  //zero out hints
@@ -63,6 +65,16 @@ int main(int argc, char* argv[])
   {
     perror("send identifier");
   }
+
+  do{
+  	fgets(message, BUF_SIZE, stdin)
+  	if(write(sock, message, strlen(message)) < 0)
+  	{
+  		perror("send message");
+  	}
+  	
+  }
+  while(message != "/quit")
 
   //read the response until EOF
   while( (n = read(sock, response, BUF_SIZE)) > 0)
