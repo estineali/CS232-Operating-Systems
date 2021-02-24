@@ -1,4 +1,8 @@
+manroute: main.c malloc.c malloc.h
+    gcc main.c malloc.c malloc.h -o manroute
 
+tar:  ./*.c ./*.tar
+    tar -zcvf Lec1_ma03559_A3.tar.gz ./Makefile ./*.c ./*.h ./*.pdf
 
-wrap:
-	tar -zcvf Lec1_gp05_A3.tar.gz ./*.c ./Makefile ./Lec1_gp05_A3.tex ./Lec1_gp05_A3.pdf
+clean:
+    rm manroute
