@@ -1,12 +1,10 @@
 # Assignment 3 for Operating Systems
 
-**Final Submission File Name:** Lec1_gp05_A3.tar.gz
+**Final Submission File Name:** Lec1_ma03559_A3.tar.gz
 
 **TODO**: 
 
-	1. 
-	2. 
-	3.
+	1. Implement Assignment requirements in PDF 
 	
 
 		
@@ -26,5 +24,3 @@
 	tar -zcvf Lec1_gp05_A2.tar.gz ./*
 	
 	Will generate the tar file in the cwd.
-
-**DEADLINE:** X-Day XX November 11 55 PM
