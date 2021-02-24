@@ -14,30 +14,399 @@
 \begin{document}
 
 
-\title{CS232 Operating Systems \\ Assignment 03: INSERT TITLE HERE}
-\author{ Fatima Nadeem (fn03768) \and Muhammad Shahrom Ali (ma03559)}
+\title{CS232 Operating Systems \\ Assignment 03: Implementing memory management routines}
+\author{Muhammad Shahrom Ali \\ma03559}
 \date{Fall 2019}
 \maketitle
 
 
-\section {Question No. 1}
+\section*{Lec1 ma03559 A3 malloc.h}
 
-\lstinputlisting{Lec1_gp05_A3Q1_XYZ.c}
+\begin{verbatim}
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/mman.h>
+
+#ifndef Lec1_ma03559_A3_malloc
+
+typedef struct Node
+{	
+	int size;
+	struct Node_t *next;
+} Node_t;
+
+typedef struct LinkedList
+{
+	
+	Node_t *head;
+	size_t node_count; //Count of nodes.
+} LinkedList_t;
+
+typedef struct MemoryHeader
+{
+	int size;
+	int magic_number; //Count of nodes.
+} Header_t;
+
+LinkedList_t heap; 
+
+int my_init();
+void *my_malloc(int size);
+void my_free(void *what);
+void *my_calloc(int num, int size);
+void *my_realloc(void* what, int size);
+void my_coalesce();
+void my_showfreelist();
+void my_uninit();
+int get_magic(int password); //Helper_function
+#endif
+
+\end{verbatim}
+
+\section*{Lec1 ma03559 A3 malloc.c}
+
+\begin{verbatim}
+#include "Lec1_ma03559_A3_malloc.h"
+
+//Helpers
+int get_magic(int password)
+{
+	//Wrap magic number, hide it. 
+	//Password to prevent user(s) from accessing it.
+
+	return password != 1357924680 ? 0 : 97654321;
+}
+
+//Functions 
+int my_init()
+{
+	size_t init_size = 1048576;  //1 MB 
+
+	Node_t* head = mmap(NULL, init_size, 
+							PROT_READ | PROT_WRITE,
+							MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+
+	if ( (void*) head == (void*) -1)
+	{
+		printf("Failed to Allocate Memory!\n");
+		return 0;
+	}
+	
+
+	head->size = init_size - sizeof(Node_t); 
+	head->next = NULL;
+
+	heap.node_count = 1; //Number of free-space blocks
+	heap.head = head;
+
+	return 1;
+}
+
+void *my_malloc(int size) 
+{ 
+
+	Node_t* before_temp = heap.head;
+	Node_t* temp = heap.head;
+
+	int is_head = 1; //to check if node is also the head_node 
+	
+	while (temp != NULL)
+	{
+		if (temp->size >= size )
+		{
+			//Conserving old values of *temp
+			int temp_size = temp->size;  
+			Node_t* temp_next = (Node_t*) temp->next;
+
+			Header_t* header =  (Header_t*) temp;
+			header->size = size;
+			header->magic_number = get_magic(1357924680);
+
+			temp =  (void* ) temp + sizeof(Header_t);
+			
+			void* retval = (void* ) temp;
+
+			temp = (void* ) temp + size;  
+			temp->size = temp_size - size - sizeof(Header_t);
+			temp->next = (void*) temp_next;
+			
+			if (is_head == 1)
+			{
+				heap.head = temp;
+			}
+			else
+			{
+				before_temp->next = (void*) temp;
+			}
+			
+			return retval;
+		}
+		before_temp = temp;
+		temp = (Node_t*) temp->next;
+		is_head = 0;
+	}
+	if (temp == NULL)
+	{
+		printf("Not enough memory to allocate %d bytes. Exiting now... \n",size );
+		return NULL;
+	}
+}
+
+
+void *my_calloc(int num, int size) 
+{ 
+	if (num == 0 || size == 0)
+	{
+		return NULL;
+	}
+
+	int total_bytes = num*size;
+	
+	Node_t* before_temp = heap.head;
+	Node_t* temp = heap.head;
+	int is_head = 1; //to check if node is also the head_node 
+	
+	while (temp != NULL)
+	{
+		if (temp->size >= total_bytes )
+		{
+
+			//Conserving old values of *temp
+			int temp_size = temp->size;  
+			Node_t* temp_next = (Node_t*) temp->next;
+
+			Header_t* header =  (Header_t*) temp;
+			header->size = total_bytes;
+			header->magic_number = get_magic(1357924680);
+
+			temp =  (void* ) temp + sizeof(Header_t);
+	
+			void* retval = (void* ) temp; //address to be returned;
+
+			char* temp_reset_ptr = retval;
+			for (int i = 0; i < total_bytes; ++i)
+			{
+				*temp_reset_ptr = 0;
+				temp_reset_ptr++; 
+			}
+
+			temp = (void* ) temp + total_bytes;  
+			temp->size = temp_size - total_bytes - sizeof(Header_t);
+			temp->next = (void*) temp_next;
+			
+			if (is_head == 1)
+			{
+				heap.head = temp;
+			}
+			else
+			{
+				before_temp->next = (void*) temp;
+			}
+			
+			return retval;
+		}
+		before_temp = temp;
+		temp = (Node_t*) temp->next;
+		is_head = 0;
+	}
+	if (temp == NULL)
+	{
+		printf("Not enough memory to allocate %d bytes. Exiting now... \n",size );
+		return NULL;
+	}
+}
+
+void my_free(void *what) 
+{
+	//Error Handling 
+	if (*((int*) what - 1) != get_magic(1357924680))
+	{
+		printf("Invalid Memory to Free. Exiting...\n");
+		return;
+	}
+
+	int size = *((int*) what - 2); //size in Header_t of 
+	void* current_heap_head = heap.head;
+
+	Node_t* temp = (Node_t*) ((int*) what - 2);
+	temp->size = size + (sizeof(int) * 2);
+	temp->next =  current_heap_head;
+	
+	heap.head = temp;
+	heap.node_count++;
+}
+
+void my_showfreelist() 
+{
+	Node_t* temp = heap.head; 
+	
+	printf("\nNode no. : Node Size : Node Address \n");
+	for (int i = 0; i < heap.node_count; ++i)
+	{
+		printf("%d\t : %d : %p\n", i, temp->size, temp);
+		temp = (void*) temp->next;	
+	}
+	printf("\n");
+}
+
+void my_uninit() 
+{
+	Node_t* temp = heap.head;
+	int found = 0;
+
+	long long int addr_pointed;
+	
+	while (temp != NULL)
+	{
+		addr_pointed = (long long int) temp;
+		if (addr_pointed % 0x1 == 0)
+		{
+			found = 1;
+			break;
+		}
+		temp = (Node_t*) temp->next;
+	}
+	if (found == 0)
+	{
+		printf("ERROR: Memory not free. Cannot uninitialize memory.\n");
+		return;
+	}
+
+	int uninitialized = munmap(temp, 1024*1024);
+	if (uninitialized != 0)
+	{
+		printf("my_uninit failed.\n");
+	}
+	return ;
+}
+
+void *my_realloc(void* what, int size) 
+{
+	if (what == NULL)
+	{
+		return my_malloc(size);
+	}
+	else if (size == 0)
+	{
+		my_free(what);
+		return NULL;
+	}
+	else
+	{
+		int old_size = *((int*) what - 2); //size in Header_t 
+		
+		void* new = my_malloc(size); //Ability to access each byte
+
+		int amount_to_copy = old_size >= size ? size : old_size;
+		char *read_buff = (char*) what; 
+		void *write_buff = new;
+
+		for (int i = 0; i < amount_to_copy; ++i)
+		{
+			*((char*) write_buff) = *read_buff;
+			read_buff++; 
+			write_buff++;
+		}
+		my_free(what);
+		return new;
+	}
+}
+
+void my_coalesce() 
+{
+    
+}
+
+\end{verbatim}
 
 \newpage
+\section*{Comments}
 
-\section {Question No. 2}
-
-\lstinputlisting{Lec1_gp05_A3Q2_XYZ.c}
-
-\section {Comments}
-
-No comments 
+loved it! A bit tough given the current course load but loved it all the same!
 
 \newpage
+\section*{References}
+\begin{enumerate}
+    \item Operating systems: three easy pieces -- Chapter 17 for boilerplate code and understanding of concepts
+    \item Credits Faraz Khan for helping me debug my code in initial stages
+\end{enumerate}
 
-\section{Appendix A: Makefile}
+\section*{Appendix A: main.c}
 
-\lstinputlisting{Makefile}
 
+\begin{verbatim}
+#include <stdio.h>
+#include <stdlib.h>
+#include "Lec1_ma03559_A3_malloc.h"
+
+void clear_screen();
+
+
+int main(int argc, char const *argv[])
+{
+	clear_screen();
+
+	my_init();
+	printf("Initialized.\n");
+
+	my_showfreelist();
+
+	int* a = NULL;
+
+	a = my_realloc(a, 100);
+	my_showfreelist();
+
+	long int d = (long int) &a;
+
+	my_realloc(a, 0);
+	my_showfreelist();
+
+	int* num = my_calloc(12, sizeof(int));
+	printf("Called Calloc 12 objects. Each an int.\n");
+	
+	my_showfreelist();
+
+	*num = 256 * 256 * 256;
+	
+	my_free(num);
+	printf("Freed the calloc object.\n");
+
+	my_showfreelist();
+
+	int* new_num = my_malloc(10);
+	printf("my_malloc called. 10 bytes memory allocation  \n");
+
+	my_showfreelist();
+
+	my_free(new_num);
+	printf("Freed the malloc memory.\n");
+	
+	my_showfreelist();
+	
+	my_uninit();
+	printf("Uninitialized memory.\n");
+	
+	return 0;
+}
+
+void clear_screen()
+{
+	printf("\33c");
+}
+\end{verbatim}
+
+\section*{Appendix B: Makefile}
+\begin{verbatim}
+manroute: Lec1_ma03559_A3_main.c Lec1_ma03559_A3_malloc.c Lec1_ma03559_A3_malloc.h
+    gcc Lec1_ma03559_A3_main.c Lec1_ma03559_A3_malloc.c Lec1_ma03559_A3_malloc.h -o manroute
+
+tar:  ./*.c ./*.tar
+    tar -zcvf Lec1_ma03559_A3.tar.gz ./Makefile ./*.c ./*.h ./*.pdf
+
+clean:
+    rm manroute
+		
+\end{verbatim}
+
+\newpage
 \end{document}
